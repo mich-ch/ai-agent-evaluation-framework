@@ -3,15 +3,17 @@ from src.prompts.chart_config_prompt import CHART_CONFIGURATION_PROMPT
 from src.prompts.chart_code_prompt import CREATE_CHART_PROMPT
 from src.tools.visualization_config import VisualizationConfig
 from src.utils.openai_client import get_openai_client
+from src.tracing.phoenix_setup import get_tracer # <--- NEW
 
 client = get_openai_client()
+tracer = get_tracer() # <--- NEW
 
+# Χρησιμοποιούμε @tracer.chain αντί για tool εδώ, γιατί είναι βοηθητική συνάρτηση
+@tracer.start_as_current_span("extract_chart_config") 
 def extract_chart_config(data: str, visualization_goal: str) -> dict:
-    """Step 1: Decide what chart to build."""
     formatted_prompt = CHART_CONFIGURATION_PROMPT.format(data=data,
                                                          visualization_goal=visualization_goal)
     
-    # Use structured output parsing (new OpenAI feature)
     response = client.beta.chat.completions.parse(
         model=MODEL_NAME,
         messages=[{"role": "user", "content": formatted_prompt}],
@@ -28,29 +30,23 @@ def extract_chart_config(data: str, visualization_goal: str) -> dict:
             "data": data
         }
     except Exception:
-        # Fallback if parsing fails
         return {
-            "chart_type": "line", 
-            "x_axis": "date",
-            "y_axis": "value",
-            "title": visualization_goal,
-            "data": data
+            "chart_type": "line", "x_axis": "date", "y_axis": "value",
+            "title": visualization_goal, "data": data
         }
 
+@tracer.start_as_current_span("create_chart_code")
 def create_chart(config: dict) -> str:
-    """Step 2: Write the actual Python code."""
     formatted_prompt = CREATE_CHART_PROMPT.format(config=config)
-    
     response = client.chat.completions.create(
         model=MODEL_NAME,
         messages=[{"role": "user", "content": formatted_prompt}],
     )
-    
     code = response.choices[0].message.content
-    # Clean up code blocks
     code = code.replace("python", "").replace("```", "").strip()
     return code
 
+@tracer.tool() # <--- MAIN TOOL DECORATOR
 def generate_visualization(data: str, visualization_goal: str) -> str:
     """Main Tool Function: Generates visualization code."""
     config = extract_chart_config(data, visualization_goal)

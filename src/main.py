@@ -1,14 +1,21 @@
 import sys
 import os
+import phoenix as px
 
-# Προσθήκη του src στο python path για να βρίσκει τα modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.agent.router import run_agent
+from src.tracing.phoenix_setup import setup_tracing
 
 if __name__ == "__main__":
-    print("=== AI Agent CLI ===")
-    print("Ask a question about the sales data (or type 'exit' to quit)")
+    # 1. Start Tracing
+    tracer = setup_tracing()
+    
+    # 2. Launch Phoenix UI (Optional: Open browser automatically)
+    # session = px.launch_app() 
+
+    print("=== AI Agent CLI (with Observability) ===")
+    print("Ask a question (or type 'exit')")
     
     while True:
         user_input = input("\nUser: ")
