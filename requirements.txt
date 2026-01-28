@@ -1,0 +1,12 @@
+openai
+pandas
+duckdb
+pydantic
+arize-phoenix
+openinference-instrumentation-openai
+opentelemetry-api
+opentelemetry-sdk
+tqdm
+nest_asyncio
+python-dotenv
+ipython
