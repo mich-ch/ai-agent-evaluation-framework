@@ -15,13 +15,12 @@ Crucially, it includes a robust **Evaluation Pipeline** using "LLM-as-a-Judge" t
 
 The agent uses a Router-based architecture to handle complex data tasks:
 
-```mermaid
 graph TD
     A[👤 User Query] -->|Input| B{🧠 Central Router}
     
-    B -->|Need Data?| C[🗄️ SQL Tool (DuckDB)]
-    B -->|Need Analysis?| D[📊 Analysis Tool]
-    B -->|Need Chart?| E[📈 Visualization Tool]
+    B -->|Need Data?| C["🗄️ SQL Tool (DuckDB)"]
+    B -->|Need Analysis?| D["📊 Analysis Tool"]
+    B -->|Need Chart?| E["📈 Visualization Tool"]
     
     C -->|Raw Data| B
     D -->|Insights| B
