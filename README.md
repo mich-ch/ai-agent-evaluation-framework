@@ -19,6 +19,8 @@ Unlike simple scripts, this project is structured as a production-ready applicat
 * **Dynamic Visualization:** Generates and executes Python code to create charts (Bar, Line, etc.) on the fly.
 * **Tracing & Observability:** Integrated with **Arize Phoenix** to trace agent execution paths, debug tool calls, and evaluate performance.
 
+
+
 ## 🏗️ Agent Architecture
 
 The agent uses a Router-based architecture to handle complex data tasks:
@@ -37,21 +39,3 @@ graph TD
     
     B -->|Synthesis| F[📝 Final Response]
 
-## 🏗️ Project Architecture
-
-The codebase follows a modular structure to ensure scalability and maintainability:
-
-```text
-├── data/                   # Dataset files (Parquet format)
-├── src/
-│   ├── agent/              # Core Agent Logic & Router (The "Brain")
-│   ├── tools/              # Tool definitions (The "Hands")
-│   │   ├── lookup_sales.py     # SQL Tool
-│   │   ├── analyze_data.py     # Analysis Tool
-│   │   └── visualize.py        # Charting Tool
-│   ├── prompts/            # Centralized Prompt Templates (Separation of Logic/Prompts)
-│   ├── tracing/            # Phoenix Observability instrumentation
-│   └── utils/              # Helper functions (API Clients, Config)
-├── notebooks/              # Experimental Lab Notebooks
-├── tests/                  # Unit tests
-└── requirements.txt        # Project dependencies
